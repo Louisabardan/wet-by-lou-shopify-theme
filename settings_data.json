@@ -1,0 +1,87 @@
+{
+  "current": {
+    "color_primary": "#d4a574",
+    "color_secondary": "#b8925f", 
+    "color_accent": "#e6c194",
+    "color_background": "#faf8f6",
+    "color_background_secondary": "#f5f0eb",
+    "color_text": "#2c1810",
+    "color_text_secondary": "#5d4037",
+    "type_header_font": "inter_n4",
+    "type_body_font": "inter_n4", 
+    "heading_scale": 100,
+    "body_scale": 100,
+    "page_width": 1400,
+    "spacing_sections": 0,
+    "card_style": "card",
+    "card_text_alignment": "center",
+    "card_image_padding": "0",
+    "card_corner_radius": 24,
+    "card_border_thickness": 1,
+    "card_border_opacity": 20,
+    "card_shadow_opacity": 15,
+    "card_shadow_horizontal_offset": 0,
+    "card_shadow_vertical_offset": 4,
+    "card_shadow_blur": 20,
+    "media_padding": 0,
+    "media_radius": 0,
+    "media_border_thickness": 0,
+    "media_border_opacity": 5,
+    "media_shadow_opacity": 0,
+    "media_shadow_horizontal_offset": 0,
+    "media_shadow_vertical_offset": 4,
+    "media_shadow_blur": 5,
+    "sections": {
+      "header": {
+        "type": "header",
+        "settings": {
+          "logo_width": 120,
+          "menu": "main-menu",
+          "sticky_header": true,
+          "enable_search": true
+        }
+      },
+      "footer": {
+        "type": "footer", 
+        "blocks": {
+          "footer-0": {
+            "type": "link_list",
+            "settings": {
+              "heading": "Shop",
+              "menu": "footer"
+            }
+          },
+          "footer-1": {
+            "type": "link_list",
+            "settings": {
+              "heading": "Support", 
+              "menu": "footer"
+            }
+          },
+          "footer-2": {
+            "type": "text",
+            "settings": {
+              "heading": "Contact",
+              "subtext": "<p>hello@wetbylou.com<br/>Follow @wetbylou</p>"
+            }
+          }
+        },
+        "block_order": ["footer-0", "footer-1", "footer-2"],
+        "settings": {
+          "logo_width": 120,
+          "brand_description": "For the girls who glow wet.",
+          "show_social": true,
+          "social_instagram_link": "",
+          "social_tiktok_link": "",
+          "social_youtube_link": "",
+          "newsletter_enable": true,
+          "newsletter_heading": "Join the WET Circle",
+          "newsletter_text": "Be the first to know about new launches and exclusive offers.",
+          "newsletter_placeholder": "Your email address",
+          "copyright_text": "All rights reserved.",
+          "show_payment_icons": true
+        }
+      }
+    }
+  }
+}

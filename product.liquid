@@ -1,0 +1,334 @@
+{% comment %}
+  WET by Lou - Product Page Template
+  Glamorous product page with all visual effects
+{% endcomment %}
+
+<section class="product-main">
+  <div class="product-background"></div>
+  <div class="container">
+    <div class="product-content fade-in-up">
+      <div class="product-media">
+        <div class="product-media-gallery">
+          {% comment %} Main Product Image {% endcomment %}
+          <div class="product-media-main glass-card">
+            {% if product.featured_media %}
+              <img 
+                src="{{ product.featured_media | image_url: width: 600 }}" 
+                alt="{{ product.featured_media.alt | escape }}"
+                class="product-main-image shine-effect"
+                id="ProductMainImage"
+              />
+            {% else %}
+              {{ 'product-1' | placeholder_svg_tag: 'product-main-image' }}
+            {% endif %}
+            
+            <div class="image-glow glow-pulse"></div>
+            
+            {% comment %} Product Badge {% endcomment %}
+            {% if product.available %}
+              <div class="product-status-badge available">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="12 2 15.09 8.26 22 9 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9 8.91 8.26 12 2"/>
+                </svg>
+                <span>Available</span>
+              </div>
+            {% else %}
+              <div class="product-status-badge sold-out">
+                <span>Sold Out</span>
+              </div>
+            {% endif %}
+          </div>
+          
+          {% comment %} Thumbnail Gallery {% endcomment %}
+          {% if product.media.size > 1 %}
+            <div class="product-thumbnails">
+              {% for media in product.media limit: 4 %}
+                <div class="thumbnail-item glass-card {% if forloop.first %}active{% endif %}" 
+                     data-media-id="{{ media.id }}">
+                  {% if media.media_type == 'image' %}
+                    <img 
+                      src="{{ media | image_url: width: 150 }}" 
+                      alt="{{ media.alt | escape }}"
+                      class="thumbnail-image"
+                    />
+                  {% endif %}
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+      
+      <div class="product-details">
+        <div class="product-header">
+          <div class="product-vendor">
+            {% if product.vendor != blank %}
+              <span class="vendor-badge glass-card">{{ product.vendor }}</span>
+            {% endif %}
+          </div>
+          
+          <h1 class="product-title hero-medium">{{ product.title }}</h1>
+          
+          <div class="product-price-container">
+            <div class="product-price">
+              {% if product.compare_at_price > product.price %}
+                <span class="price-compare">{{ product.compare_at_price | money }}</span>
+              {% endif %}
+              <span class="price-current text-metallic">{{ product.price | money }}</span>
+            </div>
+            
+            {% if product.compare_at_price > product.price %}
+              <div class="savings-badge">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="12 2 15.09 8.26 22 9 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9 8.91 8.26 12 2"/>
+                </svg>
+                <span>Save {{ product.compare_at_price | minus: product.price | money }}</span>
+              </div>
+            {% endif %}
+          </div>
+          
+          <div class="metallic-accent"></div>
+        </div>
+        
+        {% comment %} Product Description {% endcomment %}
+        {% if product.description != blank %}
+          <div class="product-description">
+            <div class="description-content glass-card">
+              <div class="description-text">
+                {{ product.description }}
+              </div>
+            </div>
+          </div>
+        {% endif %}
+        
+        {% comment %} Product Benefits/Tags {% endcomment %}
+        {% if product.tags.size > 0 %}
+          <div class="product-benefits">
+            <h4 class="benefits-title">Key Benefits:</h4>
+            <div class="benefits-list">
+              {% for tag in product.tags limit: 4 %}
+                <span class="benefit-tag glass-card">{{ tag }}</span>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+        
+        {% comment %} Product Form {% endcomment %}
+        <div class="product-form-container">
+          {% form 'product', product, class: 'product-form' %}
+            <div class="product-form-content glass-card">
+              {% comment %} Variant Selector {% endcomment %}
+              {% unless product.has_only_default_variant %}
+                <div class="product-variants">
+                  {% for option in product.options_with_values %}
+                    <div class="variant-selector">
+                      <label for="Option-{{ forloop.index }}" class="variant-label">
+                        {{ option.name }}
+                      </label>
+                      <div class="variant-options">
+                        {% for value in option.values %}
+                          <input 
+                            type="radio" 
+                            id="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
+                            name="{{ option.name }}"
+                            value="{{ value | escape }}"
+                            form="{{ product_form_id }}"
+                            {% if option.selected_value == value %}checked{% endif %}
+                            class="variant-input"
+                          >
+                          <label 
+                            for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
+                            class="variant-option glass-card"
+                          >
+                            {{ value }}
+                          </label>
+                        {% endfor %}
+                      </div>
+                    </div>
+                  {% endfor %}
+                </div>
+              {% endunless %}
+              
+              {% comment %} Quantity Selector {% endcomment %}
+              <div class="quantity-selector">
+                <label for="Quantity" class="quantity-label">Quantity</label>
+                <div class="quantity-input-container">
+                  <button type="button" class="quantity-btn quantity-minus" data-quantity="minus">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                  </button>
+                  <input 
+                    type="number" 
+                    id="Quantity" 
+                    name="quantity" 
+                    value="1" 
+                    min="1"
+                    class="quantity-input"
+                  >
+                  <button type="button" class="quantity-btn quantity-plus" data-quantity="plus">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <line x1="12" y1="5" x2="12" y2="19"/>
+                      <line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              
+              {% comment %} Add to Cart Button {% endcomment %}
+              <div class="product-actions">
+                <button 
+                  type="submit" 
+                  name="add"
+                  class="btn-primary add-to-cart-btn glow-pulse"
+                  {% unless product.available %}disabled{% endunless %}
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                    <line x1="3" y1="6" x2="21" y2="6"/>
+                    <path d="M16 10a4 4 0 0 1-8 0"/>
+                  </svg>
+                  <span class="add-to-cart-text">
+                    {% if product.available %}
+                      Add to Cart • {{ product.price | money }}
+                    {% else %}
+                      Sold Out
+                    {% endif %}
+                  </span>
+                </button>
+                
+                <button type="button" class="btn-secondary wishlist-btn">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                  </svg>
+                  Add to Wishlist
+                </button>
+              </div>
+            </div>
+            
+            <select name="id" id="ProductSelect" class="product-variant-select visually-hidden">
+              {% for variant in product.variants %}
+                <option 
+                  value="{{ variant.id }}"
+                  {% if variant == product.selected_or_first_available_variant %}selected="selected"{% endif %}
+                  {% unless variant.available %}disabled{% endunless %}
+                >
+                  {{ variant.title }} - {{ variant.price | money }}
+                </option>
+              {% endfor %}
+            </select>
+          {% endform %}
+        </div>
+        
+        {% comment %} Product Features {% endcomment %}
+        <div class="product-features">
+          <div class="feature-item glass-card">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+            <div class="feature-content">
+              <h5 class="feature-title">Cruelty-Free</h5>
+              <p class="feature-description">Never tested on animals</p>
+            </div>
+          </div>
+          
+          <div class="feature-item glass-card">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="12 2 15.09 8.26 22 9 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9 8.91 8.26 12 2"/>
+            </svg>
+            <div class="feature-content">
+              <h5 class="feature-title">Sulfate-Free</h5>
+              <p class="feature-description">Gentle on hair and scalp</p>
+            </div>
+          </div>
+          
+          <div class="feature-item glass-card">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+            </svg>
+            <div class="feature-content">
+              <h5 class="feature-title">Signature Scent</h5>
+              <p class="feature-description">Addictive fragrance that lingers</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% comment %} Related Products {% endcomment %}
+{% if recommendations.products_count > 0 %}
+  <section class="related-products section-padding">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="hero-medium text-center">Complete Your Ritual</h2>
+        <div class="metallic-accent" style="margin: 24px auto;"></div>
+      </div>
+      
+      <div class="products-grid">
+        {% for product in recommendations.products limit: 3 %}
+          <div class="product-card glass-card hover-lift">
+            <a href="{{ product.url }}" class="product-link">
+              <div class="product-image-container">
+                {% if product.featured_media %}
+                  {{ product.featured_media | image_url: width: 300 | image_tag: alt: product.title, class: 'product-image' }}
+                {% else %}
+                  {{ 'product-1' | placeholder_svg_tag: 'product-image' }}
+                {% endif %}
+              </div>
+              
+              <div class="product-info">
+                <h3 class="product-title">{{ product.title }}</h3>
+                <div class="product-price text-metallic">{{ product.price | money }}</div>
+              </div>
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+{% endif %}
+
+<script>
+  // Product form functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    const productForm = document.querySelector('.product-form');
+    const variantInputs = document.querySelectorAll('.variant-input');
+    const quantityBtns = document.querySelectorAll('.quantity-btn');
+    const quantityInput = document.querySelector('.quantity-input');
+    const addToCartBtn = document.querySelector('.add-to-cart-btn');
+    
+    // Variant selection
+    variantInputs.forEach(input => {
+      input.addEventListener('change', function() {
+        updateVariantSelection();
+      });
+    });
+    
+    // Quantity controls
+    quantityBtns.forEach(btn => {
+      btn.addEventListener('click', function() {
+        const action = this.dataset.quantity;
+        let currentValue = parseInt(quantityInput.value);
+        
+        if (action === 'plus') {
+          quantityInput.value = currentValue + 1;
+        } else if (action === 'minus' && currentValue > 1) {
+          quantityInput.value = currentValue - 1;
+        }
+      });
+    });
+    
+    // Add to cart with loading state
+    productForm.addEventListener('submit', function(e) {
+      addToCartBtn.classList.add('loading');
+      addToCartBtn.disabled = true;
+    });
+    
+    function updateVariantSelection() {
+      // Update variant select based on option selections
+      // This would typically be handled by Shopify's product scripts
+    }
+  });
+</script>
